@@ -1,32 +1,43 @@
 const express = require('express');
-const logger = require('./logger')
+const newone=require("../logger/logger.js");
+const newtwo=require("../util/helper.js")
+const newthree=require("../validator/formatter.js")
+const _=require("lodash")
 
 const router = express.Router();
 
 router.get('/test-me', function (req, res) {
-    console.log('I am inside the first route handler')
-    console.log('The endpoint value is', logger.endpoint)
-    console.log('Calling log function')
-    logger.logging()
     res.send('My first ever api!')
+    newone.welcome()
+    newtwo.printDate()
+    newtwo.printMonth()
+    newtwo.getBatchInfo()
+    console.log(newthree.string1)
+    console.log(newthree.string2)
+    console.log(newthree.string3)
+
+
+    
+    
+    
+    
 });
+router.get('/hello', function (req, res){
+    const arr=["Jan","Feb","Mar","April","May","June","July","Aug","Sep","Oct","Nov","Dec"]
+    console.log(_.chunk(arr,4))
+    const arr1=[1,3,5,7,9,11,13,15,17,19]
+    console.log(_.tail(arr1))
+    const un1=[1,3,5,6]
+    const un2=[5,9,7,6]
+    const un3=[9,8,2,8]
+    const un4=[10,14,52,60]
+    const un5=[11,12,7,90]
+    console.log(_.union(un1,un2,un3,un4,un5))
+    const arr6=[["horror","The Shining"],["drama","Titanic"],["thriller", "Shutter Island"],["fantasy","Pans Labyrinth"]]
+    
+    console.log(_.fromPairs(arr6))
 
-router.get('/test-me2', function (req, res) {
-    console.log('I am inside the second route handler')
-    res.send('My second ever api!')
-});
 
-
-router.get('/test-me5', function (req, res) {
-    res.send('My final ever api!')
-});
-
-router.get('/test-me3', function (req, res) {
-    res.send('My first ever api!')
-});
-
-router.get('/test-me4', function (req, res) {
-    res.send('My first ever api!')
 });
 
 module.exports = router;
