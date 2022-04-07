@@ -1,8 +1,10 @@
 const printDate=function(){
-    console.log("06-04-2022")
+    const adddate=new Date()
+    console.log(adddate)
 }
 const printMonth=function(){
-    console.log("04")
+    const adddate=new Date()
+    console.log(adddate.getMonth()+1)
 }
 const getBatchInfo=function(){
     console.log("Uranium,3rd Week,Wednesday,the topic being taught today is Nodejs module system")
