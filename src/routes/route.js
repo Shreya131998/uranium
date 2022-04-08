@@ -83,30 +83,35 @@ router.get('/films/:filmId', function(req, res){
 
 });
 
-// router.get('/missingno', function (req, res) {
-//     let arr=[1,2,3,4,5,7,8,9]
-//     let sum=0
-//     for(let i=0;i<arr.length;i++){
-//         sum+=arr[i]
-//     }
-//     console.log(sum)
-//     let sumofNaturalNums=(9*(9+1))/2
-//     let no=sumofNaturalNums-sum
+ router.get('/missingno', function (req, res) {
+     let arr=[1,2,3,4,5,7,8,9]
+     let sum=0
+     for(let i=0;i<arr.length;i++){
+         sum+=arr[i]
+     }
+     
+     let sumofNaturalNums=(9*(9+1))/2
+     let no=sumofNaturalNums-sum
     
     
-//     console.log(no)
-//     res.send(no)
+    
+     
+     res.send(no.toString())
 
-// });
+ });
 
  router.get('/missingith', function (req, res) {
      const arr=[33,34,35,37,38]
+     
      for(let i=0;i<arr.length-1;i++){
          if(arr[i+1]===(arr[i]+1)){
 
          }
          else{
-             res.send(arr[i]+1)
+             
+             let d=arr[i]+1
+             res.send(d.toString())
+             
              break
 
          }
