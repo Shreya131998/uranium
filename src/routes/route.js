@@ -113,6 +113,7 @@ router.get('/films/:filmId', function(req, res){
              res.send(d.toString())
              
              break
+             console.log()
 
          }
      }
@@ -120,8 +121,7 @@ router.get('/films/:filmId', function(req, res){
  });
 
 
-
-
+ 
 
 
 module.exports = router;
