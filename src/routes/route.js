@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
+
 router.get('/test-me', function (req, res) {
     // let a = { msg: "My first ever API response in JSON !!"} 
 
@@ -99,20 +100,22 @@ let players =
    router.post('/players', function (req, res) {
  
        //LOGIC WILL COME HERE
+       console.log(req)
        let val=req.body.name
-       let i
-       for(i=0;i<players.length;i++){
-           if(val===players[i].name){
+       let t
+       for(t=0;t<players.length;t++){
+           if(val===players[t].name){
                break
            }
        }
-       if(i===players.length){
+       if(t===players.length){
            players.push(req.body)
        }
        console.log(players)
        res.send(  { data: players , status: true }  )
    })
-  
+
+   
 
 
 
