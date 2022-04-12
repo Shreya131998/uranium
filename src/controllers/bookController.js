@@ -7,8 +7,38 @@ const createBook= async function (req, res) {
     let savedData= await BookModel.create(data)
     res.send({msg: savedData})
 }
+const bookList=async function(req,res){
+    let data=await BookModel.find().select({bookName:1,authorName:1,_id:0})
+    res.send(data)
+}
+const getBooksInYear=async function(req,res){
+    let data=req.params.getyear
+    let storedData=await BookModel.find({year:`${data}`})
+    res.send(storedData)
 
-const getBooksData= async function (req, res) {
+}
+const getParticularBooks=async function(req,res){
+    let data=await BookModel.find({bookName:/^INT/i})
+    res.send(data)
+}
+
+const getXINRBooks=async function(req,res){
+    let storedData=await BookModel.find({indianprice:{$in:[100,200,500]}})
+    res.send(storedData)
+}
+const getRandomBooks=async function(req,res){
+    let storedData=await BookModel.find({$or:[{stockAvailable:{$eq:true}},{totalPages:{$gt:500}}]})
+    res.send(storedData)
+
+}
+
+
+
+
+
+
+
+//const getBooksData= async function (req, res) {
 
     // let allBooks= await BookModel.find( ).count() // COUNT
 
@@ -65,21 +95,33 @@ const getBooksData= async function (req, res) {
     
     // ASYNC AWAIT
     
-    let a= 2+4
-    a= a + 10
-    console.log(a)
-    let allBooks= await BookModel.find( )  //normally this is an asynchronous call..but await makes it synchronous
+    // let a= 2+4
+    // a= a + 10
+    // console.log(a)
+    // let allBooks= await BookModel.find( )  //normally this is an asynchronous call..but await makes it synchronous
 
 
     // WHEN AWAIT IS USED: - database + axios
     //  AWAIT can not be used inside forEach , map and many of the array functions..BE CAREFUL
-    console.log(allBooks)
-    let b = 14
-    b= b+ 10
-    console.log(b)
-    res.send({msg: allBooks})
-}
+    // console.log(allBooks)
+    // let b = 14
+    // b= b+ 10
+    // console.log(b)
+    // res.send({msg: allBooks})
+
+
+//}
+
+
+
+
+
 
 
 module.exports.createBook= createBook
-module.exports.getBooksData= getBooksData
+
+module.exports.bookList=bookList
+module.exports.getBooksInYear=getBooksInYear
+module.exports.getRandomBooks=getRandomBooks
+module.exports.getXINRBooks=getXINRBooks
+module.exports.getParticularBooks=getParticularBooks
