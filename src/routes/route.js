@@ -1,49 +1,103 @@
 const express = require('express');
 const router = express.Router();
-// const UserModel= require("../models/userModel.js")
-//const UserController= require("../controllers/userController")
-//const BookController= require("../controllers/bookController")
+const authorModel=require("../models/newAuthorModel")
+const publisherModel=require("../models/newPublisherModel")
+const bookModel=require("../models/newBookModel")
+router.post("/createAuthor",async function(req,res){
+    let data=req.body 
+    let storedData=await authorModel.create(data)
+    res.send(storedData)
 
-// router.get("/test-me", function (req, res) {
-//     res.send("My first ever api!")
-// })
+})
 
-//router.post("/createUser", UserController.createUser  )
+router.post("/createPublisher",async function(req,res){
+    let data=req.body 
+    let storedData=await publisherModel.create(data)
+    res.send(storedData)
 
-//router.get("/getUsersData", UserController.getUsersData)
+})
+router.post("/createBook2",async function(req,res){
 
-// router.post("/createBook", BookController.createBook  )
-// router.post("/createAuthor", BookController.createAuthor)
+})
 
-// router.get("/getId",BookController.getId)
-
-// router.post("/getName",BookController.getName)
-
-// router.get("/bookRange",BookController.bookRange)
-
-//router.get("/getBooksData", BookController.getBooksData)
-
-//router.post("/updateBooks", BookController.updateBooks)
-//router.post("/deleteBooks", BookController.deleteBooks)
-
-//MOMENT JS
- const moment = require('moment');
- router.get("/dateManipulations", function (req, res) {
+router.post("/createBook",async function(req,res){
+    let data=req.body
     
-    const today = moment();
-    console.log(today.format())
-     let y= today.add(10, "days")
-
-    // let validOrNot= moment("29-02-1991", "DD-MM-YYYY").isValid()
-    //   console.log(validOrNot)
     
-    // const dateA = moment('01-01-1900', 'DD-MM-YYYY');
-    // const dateB = moment('01-01-2000', 'DD-MM-YYYY');
+     if(data.author===undefined){
+         res.send("author id is required")
 
-    //  let x= dateB.diff(dateA, "days")
-    //  console.log(x)
+     }
+     else if(data.author!==undefined){
+         let savedData=await authorModel.find({_id:data.author})
+         
+         if(savedData.length===0){
+             res.send("author is not present.")
+
+         }
+         else if(data.publisher===undefined){
+            res.send("publisher id is required")
+         }
+         else if(data.publisher!==undefined){
+            let savedData=await publisherModel.find({_id:data.publisher})
+            
+            if(savedData.length===0){
+                res.send(" publisher is not present")
+            }
+            else{
+                let storedData=await bookModel.create(data)
+                res.send(storedData)
+
+            }
+
+     
+     
+     }
+     
+     }
+     
+
+
+})
+
+router.get("/getBookDetails",async function(req,res){
+    let data=await bookModel.find().populate("author")
+    let data2=await bookModel.find().populate("publisher")
+    res.send({data,data2})
+})
+
+router.put("/updateResult",async function(req,res){
+    let data=await publisherModel.find({$or:[{name:"Penguin"},{name:"HarperCollins"}]}).select({_id:1})
     
-     res.send({ msg: "all good"})
- })
+    for(let i=0;i<data.length;i++){
+        await bookModel.updateMany(
+            {publisher:data[i]},
+            {$set:{isHardCover:true}}
+        )
+    }
+    res.send("Successfully updated")
+
+   
+   
+})
+
+router.put("/updateResult2",async function(req,res){
+    let data=await authorModel.find({rating:{$gt:3.5}}).select({_id:1})
+    
+    
+     for(let i=0;i<data.length;i++){
+         await bookModel.updateMany(
+             {author:data[i]},
+             {$inc:{"price":10}}
+            
+         )
+        
+     }
+    res.send("Successfully updated")
+    
+
+})
+
+
 
 module.exports = router;
