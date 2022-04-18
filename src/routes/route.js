@@ -4,6 +4,8 @@ const router = express.Router();
 const authorController= require("../controllers/authorController")
 const publisherController = require('../controllers/publisherController')
 const bookController= require("../controllers/bookController");
+
+const developerController=require("../controllers/developerController")
 const { route } = require('express/lib/application');
 
 router.get("/test-me", function (req, res) {
@@ -20,4 +22,9 @@ router.get('/get-all-books', bookController.fetchbooks)
 
 router.put('/books', bookController.updateBooks)
 
+
+router.post("/batches",developerController.createBatch)
+router.post("/developers",developerController.createDeveloper)
+router.get("/scholarship-developers",developerController.getScholarship)
+router.get("/developers",developerController.getDevelopers)
 module.exports = router;
