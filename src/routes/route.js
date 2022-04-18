@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const authorModel=require("../models/newAuthorModel")
 const publisherModel=require("../models/newPublisherModel")
-const bookModel=require("../models/newBookModel")
+const bookModel=require("../models/newBookModel");
+const newBookModel = require('../models/newBookModel');
 router.post("/createAuthor",async function(req,res){
     let data=req.body 
     let storedData=await authorModel.create(data)
@@ -61,17 +62,18 @@ router.post("/createBook",async function(req,res){
 })
 
 router.get("/getBookDetails",async function(req,res){
-    let data=await bookModel.find().populate("author")
-    let data2=await bookModel.find().populate("publisher")
-    res.send({data,data2})
+    let data=await bookModel.find().populate("author publisher")
+    
+    res.send(data)
 })
 
 router.put("/updateResult",async function(req,res){
     let data=await publisherModel.find({$or:[{name:"Penguin"},{name:"HarperCollins"}]}).select({_id:1})
+    console.log(data)
     
     for(let i=0;i<data.length;i++){
         await bookModel.updateMany(
-            {publisher:data[i]},
+            {publisher:data[i]._id},
             {$set:{isHardCover:true}}
         )
     }
@@ -81,13 +83,14 @@ router.put("/updateResult",async function(req,res){
    
 })
 
+
 router.put("/updateResult2",async function(req,res){
     let data=await authorModel.find({rating:{$gt:3.5}}).select({_id:1})
     
     
      for(let i=0;i<data.length;i++){
          await bookModel.updateMany(
-             {author:data[i]},
+             {author:data[i]._id},
              {$inc:{"price":10}}
             
          )
