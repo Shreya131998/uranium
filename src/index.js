@@ -21,9 +21,26 @@ app.use (
   }
   );
 
+  app.use(
+    function(req,res,next){
+        let date=new Date()
+        let forwarded=req.headers['x-forwarded-for']
+        let ip=forwarded?forwarded.split(/,/)[0]:req.socket.remoteAddress
+        
+        
+        console.log(`date is - ${date}`)
+        console.log(`ip is - ${ip}`)
+        console.log(`path is - ${req.path}`)
+        console.log(req.ip)
+        console.log(req.originalUrl)
+        next()
+    }
+)
+
+
 app.use('/', route);
 
 
-app.listen(process.env.PORT || 3000, function () {
-    console.log('Express app running on port ' + (process.env.PORT || 3000))
+app.listen(process.env.PORT || 4000, function () {
+    console.log('Express app running on port ' + (process.env.PORT || 4000))
 });
