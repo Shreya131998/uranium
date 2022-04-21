@@ -1,13 +1,85 @@
 const express = require('express');
 const router = express.Router();
-// const UserModel= require("../models/userModel.js")
-const UserController= require("../controllers/userController")
+const middlewareCont=require("../middlewares/commonMiddlewares")
+const productModel=require("../models/productModel")
+// const UserModel= require("../models/userModel")
+// const UserController= require("../controllers/userController");
+const userModel = require('../models/userModel');
+const orderModel = require('../models/orderModel');
 //const BookController= require("../controllers/bookController")
-
-
-router.get("/test-me", function (req, res) {
-    res.send("My first ever api!")
+router.post("/product",async function(req,res){
+  let data=req.body
+    let storedData=await productModel.create(data)
+    res.send(storedData)
 })
+
+  
+router.post("/user",middlewareCont.mid1,async function(req,res){
+    let data=req.body
+    let storedData=await userModel.create(data)
+    res.send(storedData)
+})
+
+router.post("/order",middlewareCont.mid1,async function(req,res){
+    let order = req.body
+    let userId = order.userId
+    let productId = order.productId
+
+
+    if(!userId) {
+        return res.send({message: "user id must be present in the order detials"})   
+    }
+
+    
+    let user = await userModel.findById(userId)
+
+    if(!user) {
+        return res.send({message: "Not a valid user id"})
+    }
+
+    
+    if(!productId) {
+        return res.send({message: "product id must be present in the order details"})
+    }
+
+    
+    let product = await productModel.findById(productId) 
+
+    if(!product) {
+        return res.send({message: "Not a valid product id"})
+    }
+    const orderDetails=await orderModel.create(order)
+    
+    if(req["isFreeAppUser"]==true){
+        await orderModel.findOneAndUpdate(
+            {_id:orderDetails._id},
+            {$set:{order,amount:0,isFreeAppUser:true}},
+            {new:true,upsert:true}
+        )
+    }
+    else{
+        let data=product.price
+        await userModel.findOneAndUpdate(
+            {_id:user},
+            {$inc:{balance:-data}}
+        )
+        await orderModel.findOneAndUpdate(
+            {id:orderDetails._id},
+            {$set:{order,amount:data,isFreeAppUser:false}},
+            {new:true,upsert:true}
+        )
+
+    }
+    res.send("Done successfully")
+    
+
+})
+
+
+
+// router.get("/test-me", function (req, res) {
+//     res.send("My first ever api!")
+// })
 
 
 // router.post("/createUser", UserController.createUser  )
@@ -41,8 +113,8 @@ router.get("/test-me", function (req, res) {
 
 
 
-router.get("/basicRoute", UserController.basicCode)
-router.post('/create-a-user', UserController.createAUser)
+// router.get("/basicRoute", UserController.basicCode)
+// router.post('/create-a-user', UserController.createAUser)
 
 
 
